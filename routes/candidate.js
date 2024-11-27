@@ -11,7 +11,7 @@ router.post('/interview', async (req, res) => {
         const shortId = nanoid(6);
         const interview = new Interview({ shortId, longUrl, questions });
         await interview.save();
-        res.status(201).json({ shortUrl: `http://localhost:3000/${shortId}` })
+        res.status(201).json({ shortUrl: `https://tiptop-front.vercel.app/${shortId}` })
     } catch (err) {
         console.log(err)
     }
