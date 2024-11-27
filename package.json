@@ -1,12 +1,4 @@
 {
-  "name": "tiptop",
-  "version": "0.1.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "build": "react-scripts build",
-    "dev": "nodemon server.js"
-  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
