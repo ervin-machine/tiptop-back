@@ -16,6 +16,16 @@ router.post('/register', async (req, res) => {
 
         const user = new User({ firstName, lastName, email, password });
         await user.save();
+        
+        res.cookie('token', token, {
+
+            httpOnly: true,
+            
+            secure: true, // Use true if your site is served over HTTPS
+            
+            sameSite: 'None', // Set to 'None' for cross-origin access
+            
+            }); 
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(201).json({ token, user: { id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email } });
@@ -34,6 +44,15 @@ router.post('/login', async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+        res.cookie('token', token, {
+
+            httpOnly: true,
+            
+            secure: true, // Use true if your site is served over HTTPS
+            
+            sameSite: 'None', // Set to 'None' for cross-origin access
+            
+            }); 
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
