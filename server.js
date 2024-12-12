@@ -3,9 +3,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 const authRoutes = require('./routes/auth');
-const interviewRoutes = require('./routes/candidate')
+const candidateRoutes = require('./routes/candidate')
+const interviewRoutes = require('./routes/interview')
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,17 +34,23 @@ const corsOptions = {
     }
 };
 
-// Use CORS middleware
-app.use(cors(corsOptions));
+const startServer = async () => {
+    // Use CORS middleware
+    app.use(cors(corsOptions));
 
-// Connect to DB
-connectDB();
-
-// Middleware
-app.use(bodyParser.json());
+    // Connect to DB
+    await connectDB();
+    console.log("MongoDB connected. Starting server...");
+    // Middleware
+    app.use(bodyParser.json());
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/candidate', interviewRoutes);
+    app.use('/api/auth', authRoutes);
+    app.use('/api/candidate', candidateRoutes);
+    app.use('/api/interview', interviewRoutes);
 
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+    app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+}
+
+
+startServer();

@@ -13,6 +13,10 @@ const InterviewSchema = new mongoose.Schema({
         type: Array,
         required: true,
     },
+    isFinished: {
+        type: Boolean,
+        required: false
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Interview', InterviewSchema);
