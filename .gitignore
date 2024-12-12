@@ -1,3 +1,4 @@
 /node_modules
 .env
 temp_blob.mp3
+package-lock.json
