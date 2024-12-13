@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Define allowed origins (e.g., http://localhost:3000 for React frontend)
-const allowedOrigins = ['http://localhost:3000', 'https://tiptop-front.vercel.app', "https://tiptop-front-dnde0pfl6-ervin-hodzics-projects.vercel.app/login"];
+const allowedOrigins = ['http://localhost:3000', 'https://tiptop-front.vercel.app', "https://tiptop-front-dnde0pfl6-ervin-hodzics-projects.vercel.app"];
 
 // CORS configuration
 const corsOptions = {
