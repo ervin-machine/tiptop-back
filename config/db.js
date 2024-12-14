@@ -11,6 +11,7 @@ const connectDB = async () => {
         const client = new MongoClient(cosmosConnectionString, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
+            useCreateIndex: true
         });
 
         await client.connect();
