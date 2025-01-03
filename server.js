@@ -4,9 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const { connectDB } = require('./config/db');
-const authRoutes = require('./routes/auth');
-const candidateRoutes = require('./routes/candidate')
-const interviewRoutes = require('./routes/interview')
+const routes = require('./routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,9 +43,7 @@ const startServer = async () => {
     app.use(bodyParser.json());
 
 // Routes
-    app.use('/api/auth', authRoutes);
-    app.use('/api/candidate', candidateRoutes);
-    app.use('/api/interview', interviewRoutes);
+    app.use('', routes);
 
     app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 }
