@@ -35,7 +35,19 @@ const allInterviews = catchAsync(async(req, res) => {
 
         res.status(status.OK).send({ interviews });
     } catch (err) {
+        console.log(err)
         res.status(status.INTERNAL_SERVER_ERROR).send("Failed to get all interviews", err);
+    }
+})
+
+const checkInterview = catchAsync(async (req, res) => {
+    try {
+
+        const result = await interviewService.checkInterview(req.query.interview)
+        res.status(status.OK).send(result);
+    } catch (err) {
+        console.error("Error in checkInterview:", err);
+        res.status(status.INTERNAL_SERVER_ERROR).send("Failed to get all interviews");
     }
 })
 
@@ -95,13 +107,15 @@ const updateInterview = catchAsync(async(req, res) => {
     }
 })
 
+
 module.exports = {
     getAudio,
     newInterview,
+    checkInterview,
     allInterviews,
     newInterviewTemplate,
     allInterviewTemplates,
     deleteInterview,
     Interview,
-    updateInterview
-}
+    updateInterview,
+};

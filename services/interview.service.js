@@ -4,6 +4,8 @@ const { status } = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Interview, InterviewTemplate } = require('../models');
 const { nanoid } = require('nanoid');
+const _ = require('lodash');
+const sortArray = require("../utils/sortArray")
 
 async function createInterview(interviewBody) {
     const { candidatePosition, candidateFirstName, candidateLastName, candidateEmail, createdBy, longUrl, questions } = interviewBody;
@@ -19,6 +21,54 @@ async function createInterview(interviewBody) {
     } catch (err) {
         console.log(err)
         throw new ApiError(status.BAD_REQUEST, "Error while creating interview");
+    }
+}
+
+async function getInterviewByPosition(candidatePosition) {
+    return await Interview.find({ candidatePosition })
+}
+
+async function getInterviewByCandidateMail(candidateEmail, candidateFirstName, candidateLastName) {
+    return await Interview.find({ candidateEmail, candidateFirstName, candidateLastName })
+}
+
+async function checkInterview(interviewBody) {
+    const { candidatePosition, candidateEmail, candidateFirstName, candidateLastName, questions } = interviewBody
+    try {
+        const interviewByPosition = await getInterviewByPosition(candidatePosition)
+        const interviewByCandidateEmail = await getInterviewByCandidateMail(candidateEmail, candidateFirstName, candidateLastName);
+
+        if(interviewByCandidateEmail.length > 0) {
+            const areEqual = interviewByCandidateEmail[0].questions.length === questions.length &&
+                                interviewByCandidateEmail[0].questions.every((obj, index) => {
+                                    return parseInt(obj.id) === parseInt(questions[index].id) && obj.question === questions[index].question;
+                                });
+
+            return {
+                errorType: "ErrorByQuery",
+                areEqual,
+                errorText: ""
+            }
+        }
+
+        if(interviewByPosition.length === 0) {
+            return {
+                errorType: "candidatePosition",
+                areEqual: false,
+                errorText: ""
+            }
+        }
+
+        return {
+            errorType: "candidatePosition",
+            areEqual: interviewByPosition.length > 0 && interviewByPosition[0].candidatePosition === candidatePosition,
+            errorText: interviewByPosition.length > 0 && interviewByPosition[0].candidatePosition === candidatePosition ? "Interview with this position already exist" : ""
+        }
+
+
+    } catch (err) {
+        console.error("Error in getting interveiws:", err);
+        throw new ApiError(status.BAD_REQUEST, "Could not get interviews");
     }
 }
 
@@ -129,4 +179,14 @@ async function streamAudioFile(audioId, res) {
     }
 }
 
-module.exports = { streamAudioFile, getAllInterviews, createInterview, createInterviewTemplate, getAllInterviewTemplates, getInterview, deleteInterview, updateInterview };
+module.exports = { 
+    streamAudioFile, 
+    getAllInterviews, 
+    checkInterview,
+    createInterview, 
+    createInterviewTemplate, 
+    getAllInterviewTemplates, 
+    getInterview, 
+    deleteInterview, 
+    updateInterview,
+};

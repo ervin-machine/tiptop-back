@@ -25,19 +25,8 @@ const changePassword = catchAsync(async(req, res) => {
     res.status(status.OK).send("Password changed");
 })
 
-const uploadAvatar = catchAsync(async(req, res) => {
-    try {
-        const avatar = await uploadService.uploadAvatar(req.file)
-        res.status(status.CREATED).json({ avatar })
-    } catch(err) {
-        console.log("Error", err)
-        res.status(status.INTERNAL_SERVER_ERROR).send("Failed to upload avatar", err)
-    }
-})
-
 module.exports = {
     register,
     login,
     changePassword,
-    uploadAvatar
 }

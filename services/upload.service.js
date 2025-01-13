@@ -91,15 +91,4 @@ async function uploadAndTranscribeAudio(file) {
     });
 }
 
-async function uploadAvatar(uploadBody) {
-    const { file } = uploadBody;
-
-    try {
-        return file;
-    } catch(err) {
-        console.log("Error: ", err)
-        throw new ApiError(status.INTERNAL_SERVER_ERROR, 'Error uploading avatar');
-    }
-}
-
-module.exports = { uploadAndTranscribeAudio, uploadAvatar };
+module.exports = { uploadAndTranscribeAudio };

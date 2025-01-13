@@ -5,8 +5,6 @@ const path = require('path');
 const crypto = require('crypto');
 
 let gfsBucket;
-let gfsBucketAvatar;
-let gfsStorageAvatar;
 
 const connectDB = async () => {
     try {
@@ -19,27 +17,6 @@ const connectDB = async () => {
 
         const db = connection.connection.db; // Access db directly
         gfsBucket = new GridFSBucket(db, { bucketName: "audio" });
-
-        gfsBucketAvatar = new GridFSBucket(db, { bucketName: "avatar" });
-
-        gfsStorageAvatar = new GridFsStorage({
-            url: process.env.AZURE_COSMOS_CONNECTIONSTRING || process.env.MONGO_URI,
-            file: (req, file) => {
-                return new Promise((resolve, reject) => {
-                    crypto.randomBytes(16, (err, buf) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        const filename = buf.toString('hex') + path.extname(file.originalname);
-                        const fileInfo = {
-                            filename: filename,
-                            bucketName: 'avatar' // Should match the collection name
-                        };
-                        resolve(fileInfo);
-                    });
-                });
-            }
-        });
 
         console.log("gfsBucket initialized successfully");
 
@@ -55,12 +32,4 @@ const getGfsBucket = () => {
     return gfsBucket;
 };
 
-const getGfsBucketAvatar = () => {
-    return gfsBucketAvatar;
-};
-
-const getGfsStorateAvatar = () => {
-    return gfsStorageAvatar
-}
-
-module.exports = { connectDB, getGfsBucket, getGfsBucketAvatar, getGfsStorateAvatar };
+module.exports = { connectDB, getGfsBucket };
