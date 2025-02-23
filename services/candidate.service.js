@@ -14,23 +14,37 @@ const getInterviewUrl = async (interviewBody) => {
 }
 
 const updateInterviewByShortId = async (interviewBody) => {
-    const { questions, shortId } = interviewBody;
+    const { transcriptionData, activeStep, shortId, uploadID } = interviewBody;
+
     try {
         const interview = await Interview.findOne({ shortId });
-        const filter = { _id: interview._id };
-        const update = { questions: questions, isFinished: true };
 
-        const result = await Interview.findByIdAndUpdate(filter, update, { new: true });
-        if (result) {
-            return result;
-          } else {
+        if (!interview) {
+            throw new ApiError(status.BAD_REQUEST, 'No interview found with the given shortId.');
+        }
+        
+        let questions = interview.questions || [];
+        if(questions[activeStep]){
+        questions[activeStep].transcribe = transcriptionData?.text
+        questions[activeStep].summarization = transcriptionData?.summary
+        questions[activeStep].answer = uploadID}
+
+        const result = await Interview.findOneAndUpdate(
+            { shortId },
+            { $set: { questions: questions } },
+            { new: true }
+        );
+
+        if (!result) {
             throw new ApiError(status.BAD_REQUEST, 'No item found with the given ID.');
-          }
-    } catch(error) {
-        console.error("Error:", error);
-        res.status(status.INTERNAL_SERVER_ERROR).send("Error updating interview.");
+        }
+
+        return result;
+    } catch (error) {
+        console.error("Error updating interview:", error);
     }
-}
+};
+
 
 module.exports = {
     getInterviewUrl,

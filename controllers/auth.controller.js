@@ -20,7 +20,6 @@ const login = catchAsync(async(req, res) => {
 })
 
 const changePassword = catchAsync(async(req, res) => {
-    console.log(req.body)
     await authService.changePassword(req.body._id);
     res.status(status.OK).send("Password changed");
 })
