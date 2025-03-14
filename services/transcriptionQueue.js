@@ -1,5 +1,5 @@
 const { Queue, Worker } = require('bullmq');
-const { REDIS_HOST, REDIS_PORT, REDIS_ACCESS, REDIS_URL } = require("../config/dotenv");
+const { REDIS_HOST, REDIS_PORT, REDIS_ACCESS } = require("../config/dotenv");
 const axios = require("axios");
 const { ASSEMBLYAI_API_KEY, ASSEMBLYAI_API_URL } = require("../config/assemblyAIConfig");
 const ApiError = require('../utils/ApiError');
@@ -7,12 +7,10 @@ const { status } = require('http-status');
 const { getInterview } = require('./interview.service')
 const { updateInterviewByShortId } = require('./candidate.service')
 
-const connection = {
-    connectionString: REDIS_URL
-  };
-  
+console.log(REDIS_HOST, REDIS_PORT, REDIS_ACCESS)
+
 const transcriptionQueue = new Queue('transcriptionQueue', {
-    connection: connection
+    connection: { host: REDIS_HOST, port: 6380, password: REDIS_ACCESS, tls: {} }
 });
 
 async function transcribeAudio(audioUrl) {
@@ -68,7 +66,7 @@ const worker = new Worker(
             throw error;
         }
     },
-    { connection: connection }
+    { connection: { host: REDIS_HOST, port: 6380, password: REDIS_ACCESS, tls: {} } }
 );
 
 
