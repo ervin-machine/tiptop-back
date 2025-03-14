@@ -9,7 +9,7 @@ require('./services/transcriptionQueue');
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
-
+const { REDIS_HOST, REDIS_PORT, REDIS_ACCESS, REDIS_URL } = require("./config/dotenv");
 // Allowed CORS origins
 const allowedOrigins = [
     'http://localhost:3000', 
@@ -39,11 +39,10 @@ const corsOptions = {
 const startServer = async () => {
     app.use(cors(corsOptions));
     app.use(bodyParser.json());
-
+    
     // Connect to DB
     await connectDB();
     console.log("MongoDB connected. Starting server...");
-
     // Routes
     app.use('', routes);
 
