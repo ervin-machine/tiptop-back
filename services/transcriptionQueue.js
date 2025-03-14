@@ -7,8 +7,10 @@ const { status } = require('http-status');
 const { getInterview } = require('./interview.service')
 const { updateInterviewByShortId } = require('./candidate.service')
 
+console.log(REDIS_HOST, REDIS_PORT, REDIS_ACCESS)
+
 const transcriptionQueue = new Queue('transcriptionQueue', {
-    connection: { host: REDIS_HOST, port: REDIS_PORT, password: REDIS_ACCESS, tls: {} }
+    connection: { host: REDIS_HOST, port: 6380, password: REDIS_ACCESS, tls: {} }
 });
 
 async function transcribeAudio(audioUrl) {
@@ -51,20 +53,21 @@ const worker = new Worker(
 
             let transcriptionData;
             do {
-                await new Promise(resolve => setTimeout(resolve, 5000)); // Poll every 5 seconds
+                await new Promise(resolve => setTimeout(resolve, 5000)); // Poll every 5s
                 const statusResponse = await getTranscription(transcriptId);
                 transcriptionData = statusResponse.data;
             } while (transcriptionData.status !== "completed" && transcriptionData.status !== "failed");
 
-            await updateInterviewByShortId({ transcriptionData, activeStep: interviewBody.activeStep, shortId: interviewBody.shortId, uploadID })
-        
+            await updateInterviewByShortId({ transcriptionData, activeStep: interviewBody.activeStep, shortId: interviewBody.shortId, uploadID });
+
             return transcriptionData;
         } catch (error) {
             console.error("Transcription Error:", error);
             throw error;
         }
     },
-    { connection: { host: REDIS_HOST, port: REDIS_PORT } }
+    { connection: { host: REDIS_HOST, port: 6380, password: REDIS_ACCESS, tls: {} } }
 );
+
 
 module.exports = { transcriptionQueue };
