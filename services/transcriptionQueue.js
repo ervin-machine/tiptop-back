@@ -4,7 +4,6 @@ const axios = require("axios");
 const { ASSEMBLYAI_API_KEY, ASSEMBLYAI_API_URL } = require("../config/assemblyAIConfig");
 const ApiError = require('../utils/ApiError');
 const { status } = require('http-status');
-const { getInterview } = require('./interview.service')
 const { updateInterviewByShortId } = require('./candidate.service')
 
 console.log(REDIS_HOST, REDIS_PORT, REDIS_ACCESS)
