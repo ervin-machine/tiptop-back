@@ -3,13 +3,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const http = require("http");
-const { initializeSocket } = require("./config/socketService");
 const { connectDB } = require('./config/db');
 const routes = require('./routes');
 require('./services/transcriptionQueue');
 const app = express();
 const server = http.createServer(app);
-const io = initializeSocket(server);
 const PORT = process.env.PORT || 5000;
 
 // Allowed CORS origins

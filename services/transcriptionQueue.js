@@ -1,6 +1,5 @@
 const { Queue, Worker } = require('bullmq');
 const { REDIS_HOST, REDIS_PORT, REDIS_ACCESS } = require("../config/dotenv");
-const { getSocketInstance } = require("../config/socketService");
 const axios = require("axios");
 const { ASSEMBLYAI_API_KEY, ASSEMBLYAI_API_URL } = require("../config/assemblyAIConfig");
 const ApiError = require('../utils/ApiError');
