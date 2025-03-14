@@ -10,6 +10,7 @@ const { updateInterviewByShortId } = require('./candidate.service')
 const connection = {
     connectionString: REDIS_URL
   };
+  
 const transcriptionQueue = new Queue('transcriptionQueue', {
     connection: connection
 });
