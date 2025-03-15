@@ -6,8 +6,6 @@ const ApiError = require('../utils/ApiError');
 const { status } = require('http-status');
 const { updateInterviewByShortId } = require('./candidate.service')
 
-console.log(REDIS_HOST, REDIS_PORT, REDIS_ACCESS)
-
 const transcriptionQueue = new Queue('transcriptionQueue', {
     connection: { host: REDIS_HOST, port: 6380, password: REDIS_ACCESS, tls: {} }
 });
